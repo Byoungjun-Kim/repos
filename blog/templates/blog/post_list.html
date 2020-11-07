@@ -1,0 +1,319 @@
+{% load static %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-design-icons/3.0.1/iconfont/material-icons.min.css">
+<link rel="stylesheet" href="{% static 'css/blog.css' %}">
+{% load mathfilters %}
+
+
+<div class="container-lecture">
+    <section class="header">
+        <h3 class="headline">시간표 만들기</h3>
+    </section>
+    <section class="section-nav">
+        <form method="POST" id="search-form" class="form-search" action="{% url 'schedule_list' %}">
+            {% csrf_token %}
+            <input type="text" placeholder="강의 검색" class="form-control" name="search">
+            <span><i class="material-icons ic-search">search</i></span>
+        </form>
+
+        <ul class="list-lecture">
+          {% ifequal search "" %}
+            {% for list in lecture_list %}
+              <li class="card-lecture" data-id="#{{list.code}}info">
+                  <a class="lecture-title" href="#{{list.code}}">{{list.lecture}}</a>
+                  <h6 class="lecture-time">
+                      <i class="material-icons ic-lecture-info">access_time</i>
+                      <span>{{list.start}} - {{list.end}} | {{list.day}}</span>
+                  </h6>
+                  <ul class="list-lecture-info">
+                      <li>교과목 코드 : {{list.code}}</li>
+                      <li>담당 교수 : {{list.prof}}</li>
+                      <li>강의실 :  {{list.location}}</li>
+                  </ul>
+              </li>
+            {% endfor %}
+          {% else %}
+            {% for list in lecture_list %}
+              {% if search in list.code %}
+              <li class="card-lecture" data-id="#{{list.code}}info">
+                  <a class="lecture-title" href="#{{list.code}}">{{list.lecture}}</a>
+                  <h6 class="lecture-time">
+                      <i class="material-icons ic-lecture-info">access_time</i>
+                      <span>{{list.start}} - {{list.end}} | {{list.day}}</span>
+                  </h6>
+                  <ul class="list-lecture-info">
+                      <li>교과목 코드 : {{list.code}}</li>
+                      <li>담당 교수 : {{list.prof}}</li>
+                      <li>강의실 :  {{list.location}}</li>
+                  </ul>
+              </li>
+              {% endif %}
+              {% if search in list.lecture %}
+              <li class="card-lecture" data-id="#{{list.code}}info">
+                  <a class="lecture-title" href="#{{list.code}}">{{list.lecture}}</a>
+                  <h6 class="lecture-time">
+                      <i class="material-icons ic-lecture-info">access_time</i>
+                      <span>{{list.start}} - {{list.end}} | {{list.day}}</span>
+                  </h6>
+                  <ul class="list-lecture-info">
+                      <li>교과목 코드 : {{list.code}}</li>
+                      <li>담당 교수 : {{list.prof}}</li>
+                      <li>강의실 :  {{list.location}}</li>
+                  </ul>
+              </li>
+              {% endif %}
+              {% if search in list.prof %}
+              <li class="card-lecture" data-id="#{{list.code}}info">
+                  <a class="lecture-title" href="#{{list.code}}">{{list.lecture}}</a>
+                  <h6 class="lecture-time">
+                      <i class="material-icons ic-lecture-info">access_time</i>
+                      <span>{{list.start}} - {{list.end}} | {{list.day}}</span>
+                  </h6>
+                  <ul class="list-lecture-info">
+                      <li>교과목 코드 : {{list.code}}</li>
+                      <li>담당 교수 : {{list.prof}}</li>
+                      <li>강의실 :  {{list.location}}</li>
+                  </ul>
+              </li>
+              {% endif %}
+            {% endfor %}
+          {% endifequal %}
+        </ui>
+    </section>
+
+    <section class="section-list">
+        <div class="container-xl">
+            <div class="table-schedule">
+                <div class="timeline">
+                    <ul>
+                        <li><span>09:00</span></li>
+                        <li><span>09:30</span></li>
+                        <li><span>10:00</span></li>
+                        <li><span>10:30</span></li>
+                        <li><span>11:00</span></li>
+                        <li><span>11:30</span></li>
+                        <li><span>12:00</span></li>
+                        <li><span>12:30</span></li>
+                        <li><span>13:00</span></li>
+                        <li><span>13:30</span></li>
+                        <li><span>14:00</span></li>
+                        <li><span>14:30</span></li>
+                        <li><span>15:00</span></li>
+                        <li><span>15:30</span></li>
+                        <li><span>16:00</span></li>
+                        <li><span>16:30</span></li>
+                        <li><span>17:00</span></li>
+                        <li><span>17:30</span></li>
+                        <li><span>18:00</span></li>
+                    </ul>
+                </div>
+
+                <div class="table-schedule-subject">
+                    <ul class="list-lecture-item">
+                        {% for d in day %}
+                        <li class="timeline-vertical">
+                            <div class="top-info today">
+                                <h4 class="day">{{d}}</h4>
+                            </div>
+                            <ul>
+                              {% for e_list in enroll_list %}
+                                {%if d in e_list.day %}
+                                  {% ifequal e_list.end|floatformat:"0"|sub:e_list.start|floatformat:"0" "1" %}
+                                    <li class="lecture-time {{num.0}}-hr hr-{{e_list.start}}" data-event={{e_list.lecture_info}}>
+                                  {% endifequal %}
+                                  {% ifequal e_list.end|floatformat:"0"|sub:e_list.start|floatformat:"0" "2" %}
+                                    <li class="lecture-time {{num.1}}-hr hr-{{e_list.start}}" data-event={{e_list.lecture_info}}>
+                                  {% endifequal %}
+                                  {% ifequal e_list.end|floatformat:"0"|sub:e_list.start|floatformat:"0" "3" %}
+                                    <li class="lecture-time {{num.2}}-hr hr-{{e_list.start}}" data-event={{e_list.lecture_info}}>
+                                  {% endifequal %}
+                                      <a href="#" data-id="#{{e_list.code}}task">
+                                          <div class="lecture-info">
+                                              <h6 class="lecture-title">{{e_list.lecture}}</h6>
+                                              <h6 class="lecture-location">{{e_list.location}}</h6>
+                                          </div>
+                                          <div class="lecture-noti" data-toggle="tooltip" data-placement="top" title="" data-original-title="{{e_list.description}}">
+                                              <i class="material-icons ic-lecture-noti">assignment</i>
+                                              <span class="lecture-noti-title">{{e_list.memo}}</span>
+                                          </div>
+                                      </a>
+                                  </li>
+                              {% endif %}
+                              {% endfor %}
+                            </ul>
+                        {% endfor %}
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+{% for list in lecture_list %}
+<div class="modal fade" id="{{list.code}}info" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h3 class="lecture-title">{{list.lecture}}</h3>
+                <ul class="lecture-info">
+                    <li class="lecture-time">
+                        <i class="material-icons ic-lecture-info">access_alarm</i>
+                        <span>강의 시간 : {{list.start}} - {{list.end}} | {{list.day}}</span>
+                    </li>
+                    <li class="lecture-code">
+                        <i class="material-icons ic-lecture-info">code</i>
+                        <span>교과목 코드 : {{list.code}}</span>
+                    </li>
+                    <li class="lecture-code">
+                        <i class="material-icons ic-lecture-info">school</i>
+                        <span>담당 교수 : {{list.prof}}</span>
+                    </li>
+                    <li class="lecture-code">
+                        <i class="material-icons ic-lecture-info">business</i>
+                        <span>강의실 : {{list.location}}</span>
+                    </li>
+                </ul>
+                <div class="lecture-description">
+                    <p class="txt-description">
+                    </p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-dismiss="modal">취소</button>
+                <button type="button" class="btn btn-primary" onclick="location.href='insert?code={{list.code}}&&op=insert'">
+                  과목 등록하기</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% for list in enroll_list %}
+<div class="modal fade" id="{{list.code}}task" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h3 class="lecture-title">{{list.lecture}}</h3>
+                <ul class="lecture-info">
+                    <li class="lecture-time">
+                        <i class="material-icons ic-lecture-info">access_alarm</i>
+                        <span>강의 시간 : {{list.start}} - {{list.end}} | (월), (수)</span>
+                    </li>
+                    <li class="lecture-code">
+                        <i class="material-icons ic-lecture-info">code</i>
+                        <span>교과목 코드 : {{list.code}}</span>
+                    </li>
+                    <li class="lecture-code">
+                        <i class="material-icons ic-lecture-info">school</i>
+                        <span>담당 교수 : {{list.prof}}</span>
+                    </li>
+                    <li class="lecture-code">
+                        <i class="material-icons ic-lecture-info">business</i>
+                        <span>강의실 : {{list.location}}</span>
+                    </li>
+                </ul>
+                <div class="lecture-description">
+                    <p class="txt-description">
+                    </p>
+                </div>
+
+                <div class="lecture-memo">
+                    <h5 class="memo-header">메모</h5>
+                    <ul>
+                        <li class="memo-list">
+                            <div class="memo-content" data-toggle="tooltip" data-placement="top" title="" data-original-title="{{list.description}}">
+                                <i class="material-icons ic-lecture-noti">assignment</i>
+                                <span class="lecture-noti-title">{{list.memo}}</span>
+                            </div>
+                            <div class="memo-btn">
+                                <a href='memo?code={{list.code}}&&op=delete'><i class="material-icons ic-lecture-noti">delete</i></a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="left">
+                    <button class="btn btn-light-primary" type="button" data-toggle="popover"
+                            data-trigger="click" data-placement="right" data-html="true" data-id="#{{list.code}}popover">
+                        메모 등록
+                    </button>
+                </div>
+                <div class="right">
+                    <button type="button" class="btn btn-light" data-dismiss="modal">확인</button>
+                    <button type="button" class="btn btn-danger" onclick="location.href='insert?code={{list.code}}&&op=delete'">과목 삭제하기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% for list in enroll_list %}
+<div id="{{list.code}}popover" style="display: none;">
+    <h5 class="schedule-title">메모 등록하기</h5>
+    <form method="POST" class="post-form" action="{% url 'enroll_memo' %}?code={{list.code}}&&op=insert">
+      {% csrf_token %}
+    <div class="form-group">
+        <label class="col-form-label">제목
+            <input type="text" class="form-control" id="recipient-name" placeholder="제목 추가" name="title">
+        </label>
+    </div>
+    <div class="form-group">
+        <label for="message-text" class="col-form-label">설명</label>
+        <textarea class="form-control" id="message-text" placeholder="설명 추가" name="description"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary btn-save">등록</button>
+  </form>
+</div>
+{% endfor %}
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script>
+$('.card-lecture').click(function () {
+  var code = $(this).data("id");
+  $(code).modal('show');
+});
+
+$('.lecture-time > a').click(function () {
+  var code = $(this).data("id")
+  $(code).modal('show');
+});
+
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip();
+});
+
+$(function () {
+  $('[data-toggle="popover"]').popover({
+    container: 'body',
+    html: true,
+    placement: 'right',
+    sanitize: false,
+    content: function () {
+      var code = $(this).data("id");
+    return $(code).html();
+    }
+  });
+});
+</script>
+
+<!--
+<script src="{% static 'js/app.js' %}"></script>
+<script src="{% static 'js/jquery.js' %}"></script>
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/jquery-3.3.1.slim.min.js' %}"></script>
+<script src="{% static 'js/popper.min.js' %}"></script>
+-->
